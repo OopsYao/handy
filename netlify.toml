@@ -1,0 +1,4 @@
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/"
