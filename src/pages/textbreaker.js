@@ -1,17 +1,39 @@
 import React from 'react';
-import breaker from '../textbreaker';
+// import breaker from '../textbreaker';
+import {
+    readText,
+    // writeText,
+} from '../utils';
+
+const base64 = blob => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    return new Promise(resolve => {
+        reader.onload = () => {
+            resolve(reader.result);
+        };
+    });
+}
 
 const handle = _ => {
     (async () => {
-        const fail = state => !(state === 'granted' || state === 'prompt');
-        const { state: read } = await navigator.permissions.query({ name: 'clipboard-read' });
-        if (fail(read)) return;
-        const text = await navigator.clipboard.readText()
-        const chunklist = breaker(text, 20)
+        try {
+            const text = await readText();
+            console.log(text);
+            for (const item of text) {
+                if (item.types !== "image/png") {
+                    alert("Clipboard contains non-image data. Unable to access it.");
+                } else {
+                    const blob = await item.getType("image/png");
+                    const imgBase64 = await base64(blob);
+                    console.log(imgBase64);
+                }
+            }
+            // const chunklist = breaker(text, 20);
+            // writeText(chunklist.join('\n'));
+        } catch {
 
-        const { state: write } = await navigator.permissions.query({ name: "clipboard-write" });
-        if (fail(write)) return;
-        navigator.clipboard.writeText(chunklist.join('\n'))
+        }
     })();
 }
 export default () => (
