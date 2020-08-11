@@ -1,29 +1,29 @@
 import React from 'react'
-import { readText } from '../utils'
+import { readText, writeText } from '../utils'
 
+// Convert blob to base64
 const base64 = (blob) => {
   const reader = new FileReader()
   reader.readAsDataURL(blob)
   return new Promise((resolve) => {
     reader.onload = () => {
-      resolve(reader.result)
+      resolve(reader.result.split(',')[1])
     }
   })
 }
 
-const handle = (_) => {
+const handle = () => {
   ;(async () => {
     try {
       const text = await readText()
-      console.log(text)
       for (const item of text) {
-        if (item.types !== 'image/png') {
-          alert('Clipboard contains non-image data. Unable to access it.')
-        } else {
-          const blob = await item.getType('image/png')
-          const imgBase64 = await base64(blob)
-          console.log(imgBase64)
-        }
+        const blob = await item.getType(item.types)
+        const imgBase64 = await base64(blob)
+        const param = new URLSearchParams({
+          base64Img: imgBase64,
+        })
+        const resp = await fetch(`.netlify/functions/ocr?${param}`)
+        console.log(await resp.json())
       }
       // const chunklist = breaker(text, 20);
       // writeText(chunklist.join('\n'));
