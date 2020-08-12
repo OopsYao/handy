@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { readText, writeText } from '../../utils'
 import styles from './.module.css'
 
@@ -30,22 +30,37 @@ const ocrSvc = async (img) => {
   return data
 }
 
-const handle = async () => {
-  try {
-    const text = await readText()
-    const [item] = text
-    const blob = await item.getType(item.types)
-    const imgBase64 = await base64(blob)
-    const parsed = await ocrSvc(imgBase64)
-    writeText(parsed.join(''))
-  } catch (e) {
-    console.log(e)
+export default () => {
+  const [process, setProcess] = useState(0)
+  const handle = async () => {
+    setProcess(1)
+    try {
+      const text = await readText()
+      const [item] = text
+      const blob = await item.getType(item.types)
+      const imgBase64 = await base64(blob)
+      const parsed = await ocrSvc(imgBase64)
+      writeText(parsed.join(''))
+      setProcess(2)
+    } catch (e) {
+      console.log(e)
+      setProcess(0)
+    }
   }
+  return (
+    <div className={styles.page}>
+      <button onClick={handle} className={styles.startButton}>
+        {(() => {
+          switch (process) {
+            case 1:
+              return 'STAY TUNED'
+            case 2:
+              return 'SUCCESS'
+            default:
+              return 'START'
+          }
+        })()}
+      </button>
+    </div>
+  )
 }
-export default () => (
-  <div className={styles.page}>
-    <button onClick={handle} className={styles.startButton}>
-      START
-    </button>
-  </div>
-)
