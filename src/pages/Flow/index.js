@@ -1,5 +1,6 @@
 import React from 'react'
-import { readText, writeText } from '../utils'
+import { readText, writeText } from '../../utils'
+import styles from './.module.css'
 
 // Convert blob to base64
 const base64 = (blob) => {
@@ -42,7 +43,9 @@ const handle = async () => {
   }
 }
 export default () => (
-  <div>
-    <button onClick={handle}>CLICK</button>
+  <div className={styles.page}>
+    <button onClick={handle} className={styles.startButton}>
+      START
+    </button>
   </div>
 )
