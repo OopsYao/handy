@@ -40,7 +40,7 @@ export default () => {
       const blob = await item.getType(item.types)
       const imgBase64 = await base64(blob)
       const parsed = await ocrSvc(imgBase64)
-      writeText(parsed.join(''))
+      writeText(parsed.join('\n'))
       setProcess(2)
     } catch (e) {
       console.log(e)
