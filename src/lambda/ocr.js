@@ -1,15 +1,12 @@
 import ocr from '../ocr'
 
 const handler = async (event, _context) => {
-  const {
-    queryStringParameters: { base64Img },
-  } = event
-
+  const { base64img } = JSON.parse(event.body)
   try {
-    if (!base64Img) {
+    if (!base64img) {
       throw 'Image not specified!'
     }
-    const body = await ocr(base64Img)
+    const body = await ocr(base64img)
     return {
       statusCode: 200,
       body: JSON.stringify(body),
