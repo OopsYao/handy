@@ -12,9 +12,24 @@ const readText = async () => {
   const text = await navigator.clipboard.read()
   return text
 }
-const writeText = async (text) => {
-  permissionCheckFailed('write')
-  await navigator.clipboard.writeText(text)
+
+const write = (text) => {
+  return new Promise((resolve) => {
+    const justWrite = () => {
+      navigator.clipboard.writeText(text).then(resolve)
+    }
+    // In case document not focused when processing
+    // (Clipboard API needs document focused)
+    if (!document.hasFocus()) {
+      const listener = () => {
+        document.removeEventListener('focus', listener, true)
+        justWrite()
+      }
+      document.addEventListener('focus', listener, true)
+    } else {
+      justWrite()
+    }
+  })
 }
 
-export { readText, writeText }
+export { readText, write }

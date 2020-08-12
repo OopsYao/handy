@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { readText, writeText } from '../../utils'
+import { readText, write } from '../../utils'
 import styles from './.module.css'
 
 // Convert blob to base64
@@ -40,7 +40,7 @@ export default () => {
       const blob = await item.getType(item.types)
       const imgBase64 = await base64(blob)
       const parsed = await ocrSvc(imgBase64)
-      writeText(parsed.join('\n'))
+      await write(parsed.join('\n'))
       setProcess(2)
     } catch (e) {
       console.log(e)
