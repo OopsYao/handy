@@ -4,7 +4,7 @@ const handler = async (event, _context) => {
   const { base64img } = JSON.parse(event.body)
   try {
     if (!base64img) {
-      throw 'Image not specified!'
+      throw new Error('Image not specified!')
     }
     const body = await ocr(base64img)
     return {
