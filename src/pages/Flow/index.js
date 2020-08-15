@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { readText, write } from '../../utils'
+import { readText, write } from 'services/clipboard'
 import styles from './.module.css'
 
 // Convert blob to base64

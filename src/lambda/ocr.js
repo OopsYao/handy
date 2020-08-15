@@ -1,4 +1,4 @@
-import ocr from '../ocr'
+import ocr from 'services/ocr'
 
 const handler = async (event, _context) => {
   const { base64img } = JSON.parse(event.body)
